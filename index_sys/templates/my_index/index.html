@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    {% load static %}
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="{% static 'test_book/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{% static 'test_book/font-awesome.min.css' %}" rel="stylesheet">
+    <!-- echart -->
+    <script src="{% static 'test_book/echarts.js' %}"> </script>  
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you View the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/assets/js/html5shiv.min.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!--<script src="/static/js/ie10-viewport-bug-workaround.js"></script>-->
+    <!--<script src="/static/js/ie-emulation-modes-warning.js"></script>-->
+
+</head>
+<body>
+
+    <!-- some contents  -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid col-md-8 col-md-offset-2">
+          <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Brand</a>
+            </div>
+      
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <form class="navbar-form navbar-left" method="GET">
+              <div class="form-group">
+                <input type="text" class="form-control" style="background-color: dimgray" placeholder="Search">
+              </div>
+              
+            </form>
+            <button type="submit" class="btn btn-default navbar-btn" style="background-color: dimgray">Submit</button>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#">Link</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Separated link</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+    <div>
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs " style="padding-top: 80px;background-color:#d5d5d5">
+                <li class="col-md-offset-1 active lit"><a href="#home" data-toggle="tab"><span class="glyphicon glyphicon-film" aria-hidden="true"></span>&nbsp;主页</a></li>
+                <li class="lit"><a href="#space" data-toggle="tab"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span>&nbsp;动态</a></li>
+                <li class="lit"><a href="#messages" data-toggle="tab"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span>&nbsp;消息</a></li>
+                <li class="lit"><a href="#love" data-toggle="tab"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span>&nbsp;收藏</a></li>
+        </ul>
+      
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="home">...</div>
+            <div role="tabpanel" class="tab-pane fade" id="profile">...</div>
+            <div role="tabpanel" class="tab-pane fade" id="messages">...</div>
+            <div role="tabpanel" class="tab-pane fade" id="settings">...</div>
+        </div>
+      
+      </div>
+    <div class="col-md-8 col-md-offset-2">
+        <div id="main" class="col-md-offset-2" style="width: 600px;height:400px;"></div>
+        <!-- <button type="button" class="btn btn-large btn-danger">button</button> -->
+        
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="{% static 'test_book/jquery.min.js' %}"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{% static 'test_book/bootstrap.min.js' %}"></script>
+    <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('main'));
+        // 显示标题，图例和空的坐标轴
+myChart.setOption({
+    title: {
+        text: '折线图堆叠'
+    },
+    tooltip : {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            label: {
+                backgroundColor: '#6a7985'
+            }
+        }
+    },
+    legend: {
+        data:[]
+    },
+    toolbox: {
+        feature: {
+            saveAsImage: {}
+        }
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : ['周一','周二','周三','周四','周五','周六','周日']
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series: [
+        {
+            name:'pc',
+            type:'line',
+            stack: '总量',
+            areaStyle: {},
+            data:[]
+        },
+        {
+            name:'mobile',
+            type:'line',
+            stack: '总量',
+            areaStyle: {},
+            data:[]
+        },
+        
+    ]
+});
+
+        // 异步加载数据
+        $.get('search_json').done(function (data) {
+           // 填入数据
+            myChart.setOption({
+                legend: {
+                    data:data.source_type
+                },
+                series: [
+                    {
+                       // 根据名字对应到相应的系列
+                        name: 'pc',
+                        data: data.pc
+                    },
+                    {
+                       // 根据名字对应到相应的系列
+                        name: 'mobile',
+                        data: data.mobile
+                    }
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

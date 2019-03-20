@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    {% load static %}
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="{% static 'test_book/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <!-- <link href="/static/css/font-awesome.min.css" rel="stylesheet">-->
+    <!-- echart -->
+    <script src="{% static 'test_book/echarts.js' %}"> </script> 
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you View the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/assets/js/html5shiv.min.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!--<script src="/static/js/ie10-viewport-bug-workaround.js"></script>-->
+    <!--<script src="/static/js/ie-emulation-modes-warning.js"></script>-->
+
+</head>
+<body>
+
+    <!-- some contents  -->
+    <h1>你好，我是模板</h1>
+    <div class="panel panel-default">
+        <div class="panel-body">
+          我的书架
+        </div>
+        <div class="panel-footer">
+            <table class="table table-condensed">
+                    <tr>
+                         <td>书名</td>
+                         <td>作者</td>
+                         <td>出版社</td>
+                    </tr>
+                <!-- {% for book in books  %}
+                <tr>
+                    <td>{{ book.book_name}}</td>
+                    <td>{{ book.author }}</td>
+                    <td>{{book.public }}</td>
+                </tr>
+                {% endfor %} -->
+            </table>
+        </div>
+      </div>
+    <button type="button" class="btn btn-large btn-danger">button</button>
+    <div id="main" style="width: 600px;height:400px;">did</div>
+ <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="{% static 'test_book/jquery.min.js' %}"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{% static 'test_book/bootstrap.min.js' %}"></script>
+    <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('main'));
+        // 显示标题，图例和空的坐标轴
+        myChart.setOption({
+            title: {
+                text: '异步数据加载示例'
+            },
+            tooltip: {},
+            legend: {
+                data:['销量']
+            },
+           xAxis: {
+               data: []
+            },
+            yAxis: {},
+            series: [{
+        name: '销量',
+        type: 'bar',
+        data: []
+    }]
+        });
+
+        // 异步加载数据
+        $.get('show_json').done(function (data) {
+           // 填入数据
+            myChart.setOption({
+                xAxis: {
+                    data: data.categories
+                },
+                series: [{
+                   // 根据名字对应到相应的系列
+                    name: '销量',
+                    data: data.data
+                }]
+            });
+        });
+    </script>
+
+
+</body>
+</html>
